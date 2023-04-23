@@ -43,7 +43,7 @@ function createMovieHtml(json) {
         <h1 class="h1Details">${json.name}</h1>
         <div class="movieDetailBg" style="background-image: url(${json.images[0].src})"></div>
         <h2>Price: <span>${json.price_html}</span></h2>
-        <h3>Description: ${json.description}</h3>
+        <h3><span class="bold">Description</span>: ${json.description}</h3>
     </div>
 `;
 }
