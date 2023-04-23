@@ -3,6 +3,8 @@ const allMovies = document.querySelector("#allMovies");
 
 const moviesDiv = document.querySelector("#moviesDiv");
 
+let featuredCount = 0;
+
 async function fetchMovies() {
   try {
     const response = await fetch(
@@ -13,6 +15,26 @@ async function fetchMovies() {
     console.log(json);
 
     moviesDiv.classList.remove("loading");
+
+    featured.onclick = function filterFeatured() {
+      featuredCount++;
+      if (featuredCount % 2 == 1) {
+        featured.innerHTML = "All Movies";
+        allMovies.innerHTML = "Featured Movies";
+        moviesDiv.innerHTML = `
+        <a href="/details.html?id=${json[0].id}" class="movieCard">
+            <div class="movieBg" style="background-image: url(${json[0].images[0].src})">
+            </div>
+            <div class="movieName">
+                ${json[0].name}
+            </div>
+        </a>
+
+    `;
+      } else {
+        location.reload();
+      }
+    };
 
     json.forEach(function (movie) {
       moviesDiv.innerHTML += `
@@ -25,18 +47,6 @@ async function fetchMovies() {
               </a>
           `;
     });
-    featured.onclick = function filterFeatured() {
-      allMovies.innerHTML = "Featured Movies";
-      moviesDiv.innerHTML = `
-      <a href="/details.html?id=${json[0].id}" class="movieCard">
-          <div class="movieBg" style="background-image: url(${json[0].images[0].src})">
-          </div>
-          <div class="movieName">
-              ${json[0].name}
-          </div>
-      </a>
-  `;
-    };
   } catch (err) {
     moviesDiv.classList.remove("loading");
     moviesDiv.classList.add("error");
