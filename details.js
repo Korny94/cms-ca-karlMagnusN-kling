@@ -11,7 +11,8 @@ const id = params.get("id");
 console.log(id);
 
 const urlKeyId =
-  "http://localhost/square-eyes/wordpress/wp-json/wc/store/products/" + id;
+  // "http://localhost/square-eyes/wordpress/wp-json/wc/store/products/" + id;
+  "http://square-eyes.local/wp-json/wc/store/products/" + id;
 
 console.log(urlKeyId);
 

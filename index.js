@@ -8,7 +8,8 @@ let featuredCount = 0;
 async function fetchMovies() {
   try {
     const response = await fetch(
-      "http://localhost/square-eyes/wordpress/wp-json/wc/store/products"
+      // "http://localhost/square-eyes/wordpress/wp-json/wc/store/products"
+      "http://square-eyes.local/wp-json/wc/store/products"
     );
     const json = await response.json();
 
@@ -16,25 +17,25 @@ async function fetchMovies() {
 
     moviesDiv.classList.remove("loading");
 
-    featured.onclick = function filterFeatured() {
-      featuredCount++;
-      if (featuredCount % 2 == 1) {
-        featured.innerHTML = "All Movies";
-        allMovies.innerHTML = "Featured Movies";
-        moviesDiv.innerHTML = `
-        <a href="/details.html?id=${json[0].id}" class="movieCard">
-            <div class="movieBg" style="background-image: url(${json[0].images[0].src})">
-            </div>
-            <div class="movieName">
-                ${json[0].name}
-            </div>
-        </a>
+    // featured.onclick = function filterFeatured() {
+    //   featuredCount++;
+    //   if (featuredCount % 2 == 1) {
+    //     featured.innerHTML = "All Movies";
+    //     allMovies.innerHTML = "Featured Movies";
+    //     moviesDiv.innerHTML = `
+    //     <a href="/details.html?id=${json[0].id}" class="movieCard">
+    //         <div class="movieBg" style="background-image: url(${json[0].images[0].src})">
+    //         </div>
+    //         <div class="movieName">
+    //             ${json[0].name}
+    //         </div>
+    //     </a>
 
-    `;
-      } else {
-        location.reload();
-      }
-    };
+    // `;
+    //   } else {
+    //     location.reload();
+    //   }
+    // };
 
     json.forEach(function (movie) {
       moviesDiv.innerHTML += `
@@ -55,3 +56,45 @@ async function fetchMovies() {
 }
 
 fetchMovies();
+
+async function fetchFeatured() {
+  try {
+    const response = await fetch(
+      // "http://localhost/square-eyes/wordpress/wp-json/wc/store/products"
+      "http://square-eyes.local/wp-json/wc/store/products?featured=true"
+    );
+    const json = await response.json();
+
+    console.log(json);
+
+    moviesDiv.classList.remove("loading");
+
+    featured.onclick = function filterFeatured() {
+      featuredCount++;
+      if (featuredCount % 2 == 1) {
+        featured.innerHTML = "All Movies";
+        allMovies.innerHTML = "Featured Movies";
+        moviesDiv.innerHTML = "";
+        json.forEach(function (featuredMovie) {
+          moviesDiv.innerHTML += `
+                  <a href="/details.html?id=${featuredMovie.id}" class="movieCard">
+                      <div class="movieBg" style="background-image: url(${featuredMovie.images[0].src})">
+                      </div>
+                      <div class="movieName">
+                          ${featuredMovie.name}
+                      </div>
+                  </a>
+              `;
+        });
+      } else {
+        location.reload();
+      }
+    };
+  } catch (err) {
+    moviesDiv.classList.remove("loading");
+    moviesDiv.classList.add("error");
+    moviesDiv.innerHTML = "There was an error!";
+  }
+}
+
+fetchFeatured();
